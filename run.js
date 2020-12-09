@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --trace-warnings
 
 const builder = require("xmlbuilder");
 const { readdir, writeFile, lstat } = require("fs");
@@ -34,12 +34,12 @@ const readSite = async (dir) => {
   const directory = await asyncReaddir(dir, { withFileTypes: true });
 
   await asyncForEach(directory, async (fileOrDirectory) => {
-    const root = `${dir}/${fileOrDirectory}`;
+    const root = `${dir}/${fileOrDirectory.name}`;
     const stat = await asyncLStat(root);
 
     if (stat.isDirectory()) {
       await readSite(root);
-    } else if (fileOrDirectory === "index.html") {
+    } else if (fileOrDirectory.name === "index.html") {
       allRoots = [...allRoots, root];
     }
   });
